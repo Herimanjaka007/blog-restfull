@@ -2,10 +2,12 @@ import express from "express";
 
 import prisma from "../config/prisma.js";
 import validateBlog from "../validator/validateBlog.js";
+import validateIdParam from "../validator/validateIdParam.js";
+import checkError from "../middleware/checkError.js";
 
 const blogsRouter = express.Router();
 
-blogsRouter.post("/", validateBlog, async (req, res) => {
+blogsRouter.post("/", validateBlog, checkError, async (req, res) => {
     try {
         //temporary use authorId in body because i have not user connected.
         const { title, content, authorId } = req.body;
@@ -33,14 +35,11 @@ blogsRouter.get("/", async (req, res) => {
     res.json(blogs);
 });
 
-blogsRouter.get("/:id", async (req, res) => {
+blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
     try {
         const { id } = req.params;
-        if (isNaN(Number(id)))
-            return res.status(404).json({ message: `Incorrect id.` });
-
         const blog = await prisma.post.findUnique({
-            where: { id: parseInt(id) }
+            where: { id }
         });
 
         if (blog)
@@ -51,12 +50,12 @@ blogsRouter.get("/:id", async (req, res) => {
     }
 });
 
-blogsRouter.patch("/:id", validateBlog, async (req, res) => {
+blogsRouter.patch("/:id", validateIdParam, validateBlog, checkError, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, content } = req.body;
         const blog = await prisma.post.update({
-            where: { id: Number(id) },
+            where: { id },
             data: { title, content }
         });
         return res.json({ message: "Update successfull", blog });
@@ -65,12 +64,9 @@ blogsRouter.patch("/:id", validateBlog, async (req, res) => {
     }
 })
 
-blogsRouter.delete("/:id", async (req, res) => {
+blogsRouter.delete("/:id", validateIdParam, async (req, res) => {
     try {
         const { id } = req.params;
-        if (isNaN(Number(id)))
-            return res.status(404).json({ message: `Incorrect id.` });
-
         const blog = await prisma.post.delete({
             where: { id: Number(id) }
         })
