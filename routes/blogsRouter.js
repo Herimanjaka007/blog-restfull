@@ -1,10 +1,11 @@
 import express from "express";
 
 import prisma from "../config/prisma.js";
+import validateBlog from "../validator/validateBlog.js";
 
 const blogsRouter = express.Router();
 
-blogsRouter.post("/", async (req, res) => {
+blogsRouter.post("/", validateBlog, async (req, res) => {
     try {
         //temporary use authorId in body because i have not user connected.
         const { title, content, authorId } = req.body;
@@ -50,7 +51,7 @@ blogsRouter.get("/:id", async (req, res) => {
     }
 });
 
-blogsRouter.patch("/:id", async (req, res) => {
+blogsRouter.patch("/:id", validateBlog, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, content } = req.body;
