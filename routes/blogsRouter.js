@@ -1,6 +1,7 @@
 import express from "express";
 
 import prisma from "../config/prisma.js";
+
 import validateBlog from "../validator/validateBlog.js";
 import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
@@ -49,6 +50,7 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
         res.status(500).json({ message: "Server error, try later." });
     }
 });
+
 
 blogsRouter.patch("/:id", validateIdParam, validateBlog, checkError, async (req, res) => {
     try {
