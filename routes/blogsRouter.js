@@ -6,6 +6,7 @@ import validateBlog from "../validator/validateBlog.js";
 import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
 
+
 const blogsRouter = express.Router();
 
 blogsRouter.post("/", validateBlog, checkError, async (req, res) => {
@@ -36,6 +37,7 @@ blogsRouter.get("/", async (req, res) => {
     res.json(blogs);
 });
 
+
 blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
     try {
         const { id } = req.params;
@@ -50,7 +52,6 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
         res.status(500).json({ message: "Server error, try later." });
     }
 });
-
 
 blogsRouter.patch("/:id", validateIdParam, validateBlog, checkError, async (req, res) => {
     try {
