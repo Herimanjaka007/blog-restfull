@@ -5,6 +5,7 @@ import prisma from "../config/prisma.js";
 import validateBlog from "../validator/validateBlog.js";
 import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
+import commentsRouter from "./commentsRouter.js";
 
 
 const blogsRouter = express.Router();
@@ -83,6 +84,6 @@ blogsRouter.delete("/:id", validateIdParam, async (req, res) => {
     }
 });
 
-
+blogsRouter.use("/:id/comments", commentsRouter);
 
 export default blogsRouter;
