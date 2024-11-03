@@ -4,7 +4,6 @@ import prisma from "../config/prisma.js";
 import validateBlog from "../validator/validateBlog.js";
 import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
-import commentsRouter from "./commentsRouter.js";
 import authenticate from "../middleware/authenticate.js";
 import checkResOwner from "../middleware/checkResOwner.js";
 
@@ -83,7 +82,5 @@ blogsRouter.delete("/:id", authenticate, validateIdParam, checkResOwner, async (
         res.status(500).json({ message: "Server error, try later." });
     }
 });
-
-blogsRouter.use("/:id/comments", commentsRouter);
 
 export default blogsRouter;
