@@ -1,26 +1,26 @@
 import express from "express";
 
 import prisma from "../config/prisma.js";
-
 import validateBlog from "../validator/validateBlog.js";
 import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
 import commentsRouter from "./commentsRouter.js";
+import authenticate from "../middleware/authenticate.js";
+import checkResOwner from "../middleware/checkResOwner.js";
 
 
 const blogsRouter = express.Router();
 
-blogsRouter.post("/", validateBlog, checkError, async (req, res) => {
+blogsRouter.post("/", authenticate, validateBlog, checkError, async (req, res) => {
     try {
-        //temporary use authorId in body because i have not user connected.
-        const { title, content, authorId } = req.body;
-
+        const { title, content } = req.body;
+        const { id } = req.user;
         const newPost = await prisma.post.create({
             data: {
                 title,
                 content,
                 author: {
-                    connect: { id: authorId }
+                    connect: { id }
                 }
             }
         });
@@ -54,7 +54,7 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
     }
 });
 
-blogsRouter.patch("/:id", validateIdParam, validateBlog, checkError, async (req, res) => {
+blogsRouter.patch("/:id", authenticate, validateIdParam, checkResOwner, validateBlog, checkError, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, content } = req.body;
@@ -68,12 +68,12 @@ blogsRouter.patch("/:id", validateIdParam, validateBlog, checkError, async (req,
     }
 })
 
-blogsRouter.delete("/:id", validateIdParam, async (req, res) => {
+blogsRouter.delete("/:id", authenticate, validateIdParam, checkResOwner, async (req, res) => {
     try {
         const { id } = req.params;
         const blog = await prisma.post.delete({
             where: { id: Number(id) }
-        })
+        });
 
         if (blog)
             return res.json({ message: "Deleted successfull", blog });
