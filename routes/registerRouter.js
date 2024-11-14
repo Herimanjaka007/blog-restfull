@@ -14,7 +14,7 @@ register.post("/", async (req, res) => {
         });
 
         if (emailInDb) {
-            return res.json({ errors: {
+            return res.status(400).json({ errors: {
                 message :`Email: ${email} is already in use.`
             } });
         }
