@@ -2,10 +2,12 @@ import express from "express";
 import bcrypt from "bcryptjs";
 
 import prisma from "../config/prisma.js";
+import validateRegister from "../validator/validateRegister.js";
+import checkError from "../middleware/checkError.js";
 
 const register = express.Router();
 
-register.post("/", async (req, res) => {
+register.post("/", validateRegister, checkError, async (req, res) => {
     try {
         const { username, email, role, password } = req.body;
         const emailInDb = await prisma.user.findFirst({
@@ -14,9 +16,11 @@ register.post("/", async (req, res) => {
         });
 
         if (emailInDb) {
-            return res.status(400).json({ errors: {
-                message :`Email: ${email} is already in use.`
-            } });
+            return res.status(400).json({
+                errors: {
+                    message: `Email: ${email} is already in use.`
+                }
+            });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
