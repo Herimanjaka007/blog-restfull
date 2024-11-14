@@ -21,7 +21,13 @@ login.post("/", async (req, res) => {
         if (!passwordMatch)
             return res.status(400).json({ message: "Wrong password." });
 
-        const payload = { id: user.id, email: user.email, role: user.role };
+        const payload = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+        };
+
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "6h" });
         return res.json({
             message: "Authentication succes",
