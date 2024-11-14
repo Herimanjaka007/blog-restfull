@@ -5,11 +5,11 @@ const checkResOwner = async (req, res, next) => {
         const { id: idPost } = req.params;
         const { id: idUser } = req.user;
 
+
         const post = await prisma.post.findFirst({
             where: { id: idPost },
-            select: { autorId }
+            select: { autorId: true }
         });
-
         if (Number(idUser) !== Number(post?.autorId)) {
             return res.status(401).json({
                 message: "Unauthorized, owner only can modify post."

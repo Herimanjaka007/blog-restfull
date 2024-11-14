@@ -34,8 +34,17 @@ blogsRouter.post("/", authenticate, validateBlog, checkError, async (req, res) =
 });
 
 blogsRouter.get("/", async (req, res) => {
-    const blogs = await prisma.post.findMany();
-    res.json(blogs);
+try {
+        const blogs = await prisma.post.findMany();
+        res.json(blogs);    
+} catch (error) {
+    console.log(error?.message);
+    res.status(500).json({
+        errors: {
+            message: "Internal server error, try later."
+        }
+    })
+}
 });
 
 
@@ -78,6 +87,7 @@ blogsRouter.delete("/:id", authenticate, validateIdParam, checkResOwner, async (
         if (blog)
             return res.json({ message: "Deleted successfull", blog });
         return res.json({ message: `Post with id: ${id} is not found.` });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Server error, try later." });
