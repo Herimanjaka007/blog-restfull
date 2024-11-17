@@ -32,7 +32,7 @@ const blogsRouter = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *                  $ref: "#components/schemas/Blog"
+ *                  $ref: "#components/schemas/BlogPost"
  *       400:
  *         description: Invalid request data.
  *         content:
