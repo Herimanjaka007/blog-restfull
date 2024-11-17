@@ -12,7 +12,7 @@ const swaggerDefinition = {
             description: "server for local dev."
         },
         {
-            url: "http://localhost:3000",
+            url: "https://blog-restfull-hahw.onrender.com",
             description: "server for prod."
         },
     ],
