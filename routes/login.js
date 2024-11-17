@@ -7,7 +7,42 @@ import prisma from "../config/prisma.js";
 
 config();
 const login = express.Router();
+/**
+ * @openapi
+ *  components:
+ *      schemas:
+ *          
+ *          User:
+ *              type: object
+ *              properties:
+ *                  id:
+ *                      type: integer
+ *                      description: Unique identifier for user
+ *                  username:
+ *                      type: string
+ *                  email:
+ *                      type: string
+ *                      format: email
+ *                  role:
+ *                      description: user role, USER by default
+ *                      example: ADMIN
+ */
 
+/**
+ * @openapi
+ *  /login:
+ *      post:
+ *          summary: login with email and password.
+ *          tags:
+ *              - Login
+ *          responses:
+ *              200:
+ *                  description: Authentication successfull
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#components/schemas/User"
+ */
 login.post("/", async (req, res) => {
     const { email, password } = req.body;
     try {

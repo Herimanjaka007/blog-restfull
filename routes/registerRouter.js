@@ -7,6 +7,26 @@ import checkError from "../middleware/checkError.js";
 
 const register = express.Router();
 
+/**
+ * @openapi
+ *  /register:
+ *      post:
+ *          tags:
+ *              - register
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: "#components/schemas/Author"
+ *          responses:
+ *              201:
+ *                  description: registration successfull
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#components/schemas/Author"
+ */
 register.post("/", validateRegister, checkError, async (req, res) => {
     try {
         const { username, email, role, password } = req.body;
