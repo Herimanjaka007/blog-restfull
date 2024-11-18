@@ -57,7 +57,7 @@ const upload = multer({ limits: 40 * 1024 * 1024 });
  *                  $ref: "#components/schemas/ErrorResponse"
  */
 
-blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkError, async (req, res) => {
+blogsRouter.post("/",upload.single("image") , authenticate, validateBlog, checkError, async (req, res) => {
     try {
         const { title, content } = req.body;
         const { id, username } = req.user;
