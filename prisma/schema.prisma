@@ -26,6 +26,7 @@ model User {
   password String
   posts    Post[]
   comments Comment[]
+  profilPicture String?
 }
 
 model Post {
@@ -36,6 +37,7 @@ model Post {
   author    User      @relation(fields: [autorId], references: [id])
   comment   Comment[]
   createdAt DateTime  @default(now())
+  image String?
 }
 
 model Comment {

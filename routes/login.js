@@ -35,6 +35,22 @@ const login = express.Router();
  *          summary: login with email and password.
  *          tags:
  *              - Login
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              email:
+ *                                  type: string
+ *                                  decription: email used to log in
+ *                                  format: email
+ *                              password:
+ *                                  type: string
+ *                                  format: password
+ *                                  description: your password
+ *                      
  *          responses:
  *              200:
  *                  description: Authentication successfull
