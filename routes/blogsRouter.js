@@ -1,4 +1,5 @@
 import express from "express";
+import multer from 'multer';
 
 import prisma from "../config/prisma.js";
 import validateBlog from "../validator/validateBlog.js";
@@ -6,9 +7,10 @@ import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
 import authenticate from "../middleware/authenticate.js";
 import checkResOwner from "../middleware/checkResOwner.js";
-
+import uploadFileToSupabase from "../config/supabase.js";
 
 const blogsRouter = express.Router();
+const upload = multer({ limits: 40 * 1024 * 1024 });
 
 /**
  * @openapi
@@ -23,7 +25,7 @@ const blogsRouter = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *              schema:
  *                  $ref: "#components/schemas/BlogField"
  *     responses:
@@ -55,14 +57,23 @@ const blogsRouter = express.Router();
  *                  $ref: "#components/schemas/ErrorResponse"
  */
 
-blogsRouter.post("/", authenticate, validateBlog, checkError, async (req, res) => {
+blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkError, async (req, res) => {
     try {
         const { title, content } = req.body;
-        const { id } = req.user;
+        const { id, username } = req.user;
+        var imageUrl = null;
+
+        if (req.file) {
+            const { buffer, mimetype } = req.file;
+            const fileName = `${username}/${Date.now()}`;
+            imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
+        }
+        
         const newPost = await prisma.post.create({
             data: {
                 title,
                 content,
+                image: imageUrl,
                 author: {
                     connect: { id }
                 }

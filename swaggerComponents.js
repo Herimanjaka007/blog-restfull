@@ -33,16 +33,24 @@
  *                      format: date-time
  *                      description: date and time of creation
  *                      example: "2024-11-17T12:34:56.789Z"
+ *                  image:
+ *                      type: string
+ *                      description: url of the picture.
  *          BlogField:
  *              type: object
  *              properties:
  *                  title:
  *                      type: string
  *                      description: title of blog
+ *                      example: title of blog
  *                  content:
  *                      type: string
  *                      description: the content of blog
- *              required: true
+ *                      example: content of blog
+ *                  image:
+ *                      type: string
+ *                      format: binary
+ *                      description: image file to upload
  * 
  *          ErrorResponse:
  *              type: object
@@ -62,6 +70,7 @@
  *                      example: Myusername
  *                  password:
  *                      type: string
+ *                      format: password
  *      securitySchemes:
  *          bearerAuth:
  *              type: http

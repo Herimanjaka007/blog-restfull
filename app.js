@@ -1,5 +1,6 @@
 import express from 'express';
 import swaggerUi from "swagger-ui-express";
+import multer from 'multer';
 
 import blogsRouter from './routes/blogsRouter.js';
 import register from './routes/registerRouter.js';
