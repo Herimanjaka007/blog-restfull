@@ -145,32 +145,39 @@ usersRouter.put("/:id",
     canEditProfile,
     upload.single("image"),
     async (req, res) => {
-        const { id } = req.params;
-        const { username } = req.user;
-        const { username: newUsername } = req.body;
-        let imageUrl = null;
+        try {
+            const { id } = req.params;
+            const { username } = req.user;
+            const { username: newUsername } = req.body;
+            let imageUrl = null;
 
-        if (req.file) {
-            const { buffer, mimetype } = req.file;
-            const fileName = `${username}/profile/${Date.now()}`;
-            imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
-        }
-
-        const user = await prisma.user.update({
-            where: { id },
-            data: {
-                username: newUsername,
-                profilPicture: imageUrl
-            },
-            select: {
-                id: true,
-                username: true,
-                role: true,
-                profilPicture: true
+            if (req.file) {
+                const { buffer, mimetype } = req.file;
+                const fileName = `${username}/profile/${Date.now()}`;
+                imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
             }
-        });
 
-        return res.json(user);
+            const user = await prisma.user.update({
+                where: { id },
+                data: {
+                    username: newUsername,
+                    profilPicture: imageUrl
+                },
+                select: {
+                    id: true,
+                    username: true,
+                    role: true,
+                    profilPicture: true
+                }
+            });
+
+            return res.json(user);
+        } catch (error) {
+            console.log(`Error happens when trying to update user profil with id: ${id}
+        error: ${error}
+        `);
+            return res.status(500).json({ message: "Server error, try later or report the bug." })
+        }
     });
 
 export default usersRouter;
