@@ -9,10 +9,10 @@ const register = express.Router();
 
 /**
  * @openapi
- *  /register:
+ *  /users/register:
  *      post:
  *          tags:
- *              - register
+ *              - User
  *          requestBody:
  *              required: true
  *              content:
