@@ -12,7 +12,6 @@ app.use(express.json());
 
 app.get("/", async (req, res) => res.redirect("/docs"));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/register", register);
 app.use("/login", login);
 app.use("/blogs", blogsRouter);
 app.use("/users", usersRouter);

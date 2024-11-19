@@ -3,6 +3,7 @@ import express from "express";
 import prisma from "../config/prisma.js";
 import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
+import register from "./registerRouter.js";
 
 const usersRouter = express.Router();
 
@@ -45,6 +46,8 @@ usersRouter.get("/", async (req, res, next) => {
         })
     }
 });
+
+usersRouter.post("/register", register);
 
 /**
  * @openapi
