@@ -65,7 +65,7 @@ blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkE
 
         if (req.file) {
             const { buffer, mimetype } = req.file;
-            const fileName = `${username}/${Date.now()}`;
+            const fileName = `${username}/post/${Date.now()}`;
             imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
         }
 
