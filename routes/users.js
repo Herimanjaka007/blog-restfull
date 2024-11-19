@@ -4,6 +4,10 @@ import prisma from "../config/prisma.js";
 import validateIdParam from "../validator/validateIdParam.js";
 import checkError from "../middleware/checkError.js";
 import register from "./registerRouter.js";
+import upload from "../config/multer.js";
+import uploadFileToSupabase from "../config/supabase.js";
+import authenticate from "../middleware/authenticate.js";
+import canEditProfile from "../middleware/canEditProfile.js";
 
 const usersRouter = express.Router();
 
@@ -36,6 +40,7 @@ usersRouter.get("/", async (req, res, next) => {
                 username: true,
                 email: true,
                 role: true,
+                profilPicture: true,
             }
         })
         res.json(users);
@@ -47,7 +52,7 @@ usersRouter.get("/", async (req, res, next) => {
     }
 });
 
-usersRouter.post("/register", register);
+usersRouter.use("/register", register);
 
 /**
  * @openapi
@@ -82,6 +87,7 @@ usersRouter.get("/:id", validateIdParam, checkError, async (req, res, next) => {
                 username: true,
                 email: true,
                 role: true,
+                profilPicture: true,
             },
             where: { id }
         });
@@ -93,5 +99,78 @@ usersRouter.get("/:id", validateIdParam, checkError, async (req, res, next) => {
         })
     }
 });
+
+/**
+ * @openapi
+ *  /users/{id}:
+ *      put:
+ *          security:
+ *              - bearerAuth: []
+ *          description: Update user field
+ *          tags:
+ *              - User
+ *          parameters:
+ *              - in: path
+ *                name: id
+ *                type: integer
+ *                required: true
+ *          requestBody:
+ *              required: true
+ *              type: object
+ *              content:
+ *                  multipart/form-data:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              username:
+ *                                  type: string
+ *                                  description: new username
+ *                                  required: true
+ *                                  example: myusername
+ *                              image:
+ *                                  type: string
+ *                                  format: binary
+ *                                  description: the profile picture blob
+ *          responses:
+ *              200:
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/User"
+ */
+usersRouter.put("/:id",
+    validateIdParam,
+    checkError,
+    authenticate,
+    canEditProfile,
+    upload.single("image"),
+    async (req, res) => {
+        const { id } = req.params;
+        const { username } = req.user;
+        const { username: newUsername } = req.body;
+        let imageUrl = null;
+
+        if (req.file) {
+            const { buffer, mimetype } = req.file;
+            const fileName = `${username}/profile/${Date.now()}`;
+            imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
+        }
+
+        const user = await prisma.user.update({
+            where: { id },
+            data: {
+                username: newUsername,
+                profilPicture: imageUrl
+            },
+            select: {
+                id: true,
+                username: true,
+                role: true,
+                profilPicture: true
+            }
+        });
+
+        return res.json(user);
+    });
 
 export default usersRouter;

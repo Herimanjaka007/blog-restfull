@@ -26,6 +26,9 @@ const login = express.Router();
  *                  role:
  *                      description: user role, USER by default
  *                      example: ADMIN
+ *                  profilePicture:
+ *                      type: string
+ *                      description: url of prile picture or null
  */
 
 /**
@@ -77,6 +80,7 @@ login.post("/", async (req, res) => {
             username: user.username,
             email: user.email,
             role: user.role,
+            profilePicture: user.profilPicture
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "6h" });
