@@ -1,5 +1,4 @@
 import express from "express";
-import multer from 'multer';
 
 import prisma from "../config/prisma.js";
 import validateBlog from "../validator/validateBlog.js";
@@ -8,9 +7,10 @@ import checkError from "../middleware/checkError.js";
 import authenticate from "../middleware/authenticate.js";
 import checkResOwner from "../middleware/checkResOwner.js";
 import uploadFileToSupabase from "../config/supabase.js";
+import upload from "../config/multer.js";
 
 const blogsRouter = express.Router();
-const upload = multer({ limits: 40 * 1024 * 1024 });
+
 
 /**
  * @openapi
@@ -68,7 +68,7 @@ blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkE
             const fileName = `${username}/${Date.now()}`;
             imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
         }
-        
+
         const newPost = await prisma.post.create({
             data: {
                 title,
