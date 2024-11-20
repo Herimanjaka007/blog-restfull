@@ -81,7 +81,7 @@ usersRouter.use("/register", register);
 usersRouter.get("/:id", validateIdParam, checkError, async (req, res, next) => {
     try {
         const { id } = req.params;
-        const users = await prisma.user.findMany({
+        const users = await prisma.user.findUnique({
             select: {
                 id: true,
                 username: true,
