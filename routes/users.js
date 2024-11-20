@@ -79,19 +79,22 @@ usersRouter.use("/register", register);
  *                          $ref: "#/components/schemas/ErrorResponse"
  */
 usersRouter.get("/:id", validateIdParam, checkError, async (req, res, next) => {
+    const { id } = req.params;
     try {
-        const { id } = req.params;
-        const users = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             select: {
                 id: true,
                 username: true,
                 email: true,
                 role: true,
-                profilPicture: true,
             },
             where: { id }
         });
-        return res.json(users);
+
+        if (user) return res.json(user);
+        return res.status(404).json({
+            message: `User with id: ${id} doesn't exist.`
+        })
     } catch (error) {
         console.log(`Error happens when retrieving user with id: ${id}, error: ${error}`);
         res.status(500).json({
