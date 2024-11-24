@@ -4,7 +4,6 @@ import prisma from "../config/prisma.js";
 import checkError from "../middleware/checkError.js";
 import authenticate from "../middleware/authenticate.js";
 import validateComment from "../validator/validateComment.js";
-import { connect } from "http2";
 import validateIdParam from "../validator/validateIdParam.js";
 
 const commentsRouter = express.Router({ mergeParams: true });
