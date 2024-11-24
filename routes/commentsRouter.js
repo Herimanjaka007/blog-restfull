@@ -49,7 +49,6 @@ commentsRouter.post("/",
     async (req, res) => {
         try {
             const { id: postId } = req.params;
-            console.log(postId, "postid");
             const { content } = req.body;
             const { id: authorId } = req.user;
             const comment = await prisma.comment.create({
