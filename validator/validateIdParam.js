@@ -1,4 +1,4 @@
-import { param, validationResult } from "express-validator";
+import { param } from "express-validator";
 
 const validateIdParam = [
     param("id")

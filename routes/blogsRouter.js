@@ -8,10 +8,9 @@ import authenticate from "../middleware/authenticate.js";
 import checkResOwner from "../middleware/checkResOwner.js";
 import uploadFileToSupabase from "../config/supabase.js";
 import upload from "../config/multer.js";
+import commentsRouter from "./commentsRouter.js";
 
 const blogsRouter = express.Router();
-
-
 /**
  * @openapi
  * /blogs:
@@ -167,7 +166,22 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
     try {
         const { id } = req.params;
         const blog = await prisma.post.findUnique({
-            where: { id }
+            where: { id },
+            select: {
+                id: true,
+                content: true,
+                createdAt: true,
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                        role: true,
+                        profilPicture: true
+                    }
+                },
+                comment: true,
+            }
         });
 
         if (blog)
@@ -252,5 +266,7 @@ blogsRouter.delete("/:id", authenticate, validateIdParam, checkResOwner, async (
         res.status(500).json({ message: "Server error, try later." });
     }
 });
+
+blogsRouter.use("/:id/comments", commentsRouter);
 
 export default blogsRouter;
