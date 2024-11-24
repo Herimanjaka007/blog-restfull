@@ -87,6 +87,7 @@ usersRouter.get("/:id", validateIdParam, checkError, async (req, res, next) => {
                 username: true,
                 email: true,
                 role: true,
+                profilPicture: true,
             },
             where: { id }
         });
