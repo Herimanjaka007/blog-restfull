@@ -171,15 +171,7 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
                 id: true,
                 content: true,
                 createdAt: true,
-                author: {
-                    select: {
-                        id: true,
-                        username: true,
-                        email: true,
-                        role: true,
-                        profilPicture: true
-                    }
-                },
+                autorId: true,
                 comment: true,
             }
         });
