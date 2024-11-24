@@ -71,6 +71,26 @@
  *                  password:
  *                      type: string
  *                      format: password
+ *          Comment:
+ *              type: object
+ *              properties:
+ *                  id:
+ *                      type: integer
+ *                      description: unique identifier of comment.
+ *                  content:
+ *                      type: string
+ *                      description: the content of comment.
+ *                  authorId:
+ *                      type: integer
+ *                      description: unique identifier of author
+ *                  postId:
+ *                      type: integer
+ *                      description: unique identifier of the post commented
+ *                  createdAt:
+ *                      type: string
+ *                      format: date-time
+ *                      exemple: "2024-11-17T12:34:56.789Z"
+ *                      
  *      securitySchemes:
  *          bearerAuth:
  *              type: http

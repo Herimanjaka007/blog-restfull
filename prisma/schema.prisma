@@ -19,13 +19,13 @@ enum Role {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  username String
-  email    String    @unique
-  role     Role @default(USER)
-  password String
-  posts    Post[]
-  comments Comment[]
+  id            Int       @id @default(autoincrement())
+  username      String
+  email         String    @unique
+  role          Role      @default(USER)
+  password      String
+  posts         Post[]
+  comments      Comment[]
   profilPicture String?
 }
 
@@ -37,7 +37,7 @@ model Post {
   author    User      @relation(fields: [autorId], references: [id])
   comment   Comment[]
   createdAt DateTime  @default(now())
-  image String?
+  image     String?
 }
 
 model Comment {

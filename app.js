@@ -2,7 +2,6 @@ import express from 'express';
 import swaggerUi from "swagger-ui-express";
 
 import blogsRouter from './routes/blogsRouter.js';
-import register from './routes/registerRouter.js';
 import login from './routes/login.js';
 import swaggerSpec from './swagger.js';
 import usersRouter from './routes/users.js';
