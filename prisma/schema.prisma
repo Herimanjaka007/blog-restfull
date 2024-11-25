@@ -33,8 +33,8 @@ model Post {
   id        Int       @id @default(autoincrement())
   title     String
   content   String
-  autorId   Int
-  author    User      @relation(fields: [autorId], references: [id])
+  authorId   Int      @map("autorId")
+  author    User      @relation(fields: [authorId], references: [id])
   comment   Comment[]
   createdAt DateTime  @default(now())
   image     String?

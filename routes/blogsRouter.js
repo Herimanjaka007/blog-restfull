@@ -76,7 +76,7 @@ blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkE
                 author: {
                     connect: { id }
                 }
-            }
+            },
         });
 
         res.status(201).json(newPost);
@@ -167,13 +167,7 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
         const { id } = req.params;
         const blog = await prisma.post.findUnique({
             where: { id },
-            select: {
-                id: true,
-                content: true,
-                createdAt: true,
-                autorId: true,
-                comment: true,
-            }
+            include: { comment: true }
         });
 
         if (blog)
