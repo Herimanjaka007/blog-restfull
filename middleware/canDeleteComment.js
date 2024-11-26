@@ -12,7 +12,7 @@ const canDeleteComment = async (req, res, next) => {
     });
 
     const comment = await prisma.comment.findFirst({
-        where: { id: commentId },
+        where: { id: Number(commentId) },
         select: { authorId: true }
     });
 
