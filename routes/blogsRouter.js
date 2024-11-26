@@ -114,7 +114,9 @@ blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkE
  */
 blogsRouter.get("/", async (req, res) => {
     try {
-        const blogs = await prisma.post.findMany();
+        const blogs = await prisma.post.findMany({
+            include: { author: true, comment: true, }
+        });
         res.json(blogs);
     } catch (error) {
         console.log(error?.message);
@@ -167,7 +169,7 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
         const { id } = req.params;
         const blog = await prisma.post.findUnique({
             where: { id },
-            include: { comment: true }
+            include: { comment: true, author: true }
         });
 
         if (blog)
