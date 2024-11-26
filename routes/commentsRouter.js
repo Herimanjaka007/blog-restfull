@@ -44,6 +44,7 @@ const commentsRouter = express.Router({ mergeParams: true });
  *  
  */
 commentsRouter.post("/",
+    validateIdParam("id"),
     authenticate,
     validateComment,
     checkError,
