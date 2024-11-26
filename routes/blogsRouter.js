@@ -255,6 +255,6 @@ blogsRouter.delete("/:id", authenticate, validateIdParam("id"), checkResOwner, a
     }
 });
 
-blogsRouter.use("/:id/comments", validateIdParam("id"), commentsRouter);
+blogsRouter.use("/:id/comments", commentsRouter);
 
 export default blogsRouter;
