@@ -164,7 +164,7 @@ blogsRouter.get("/", async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
+blogsRouter.get("/:id", validateIdParam("id"), checkError, async (req, res) => {
     try {
         const { id } = req.params;
         const blog = await prisma.post.findUnique({
@@ -207,7 +207,7 @@ blogsRouter.get("/:id", validateIdParam, checkError, async (req, res) => {
  *                          $ref : "#components/schemas/BlogPost"
  * 
  */
-blogsRouter.put("/:id", authenticate, validateIdParam, checkResOwner, validateBlog, checkError, async (req, res) => {
+blogsRouter.put("/:id", authenticate, validateIdParam("id"), checkResOwner, validateBlog, checkError, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, content } = req.body;
@@ -238,7 +238,7 @@ blogsRouter.put("/:id", authenticate, validateIdParam, checkResOwner, validateBl
  *          401:
  *              description: Authorization required
  */
-blogsRouter.delete("/:id", authenticate, validateIdParam, checkResOwner, async (req, res) => {
+blogsRouter.delete("/:id", authenticate, validateIdParam("id"), checkResOwner, async (req, res) => {
     try {
         const { id } = req.params;
         const blog = await prisma.post.delete({
@@ -255,6 +255,6 @@ blogsRouter.delete("/:id", authenticate, validateIdParam, checkResOwner, async (
     }
 });
 
-blogsRouter.use("/:id/comments", commentsRouter);
+blogsRouter.use("/:id/comments", validateIdParam("id"), commentsRouter);
 
 export default blogsRouter;

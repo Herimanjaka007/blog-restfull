@@ -5,7 +5,7 @@ const checkCommentOwner = async (req, res, next) => {
         const { id: idUser } = req.user;
 
         const comment = await prisma.comment.findFirst({
-            where: { id: commentId },
+            where: { id: Number(commentId) },
             select: { authorId: true }
         });
 

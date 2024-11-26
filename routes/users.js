@@ -78,7 +78,7 @@ usersRouter.use("/register", register);
  *                      schema:
  *                          $ref: "#/components/schemas/ErrorResponse"
  */
-usersRouter.get("/:id", validateIdParam, checkError, async (req, res, next) => {
+usersRouter.get("/:id", validateIdParam("id"), checkError, async (req, res, next) => {
     const { id } = req.params;
     try {
         const user = await prisma.user.findUnique({
@@ -143,7 +143,7 @@ usersRouter.get("/:id", validateIdParam, checkError, async (req, res, next) => {
  *                              $ref: "#/components/schemas/User"
  */
 usersRouter.put("/:id",
-    validateIdParam,
+    validateIdParam("id"),
     checkError,
     authenticate,
     canEditProfile,
