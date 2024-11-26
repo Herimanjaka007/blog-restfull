@@ -116,7 +116,7 @@ commentsRouter.put("/:commentId",
             const { commentId } = req.params;
             const { content } = req.body;
             const comment = await prisma.comment.update({
-                where: { id: commentId },
+                where: { id: Number(commentId) },
                 data: { content }
             });
             return res.json({ message: "Update successfull", comment });
@@ -159,7 +159,7 @@ commentsRouter
             try {
                 const { commentId } = req.params;
                 const comment = await prisma.comment.delete({
-                    where: { id: commentId }
+                    where: { id: Number(commentId) }
                 });
 
                 return res.json({ message: "Delete successfull", comment });
