@@ -184,7 +184,7 @@ usersRouter.put("/:id",
                 data: {
                     username: newUsername,
                     profilPicture: imageUrl,
-                    gender,
+                    gender: ["M", "F", "O"].includes(gender) ? gender : null,
                     bio
                 },
                 select: {
