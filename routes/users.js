@@ -41,6 +41,8 @@ usersRouter.get("/", async (req, res, next) => {
                 email: true,
                 role: true,
                 profilPicture: true,
+                gender: true,
+                bio: true
             }
         })
         res.json(users);
@@ -78,31 +80,36 @@ usersRouter.use("/register", register);
  *                      schema:
  *                          $ref: "#/components/schemas/ErrorResponse"
  */
-usersRouter.get("/:id", validateIdParam("id"), checkError, async (req, res, next) => {
-    const { id } = req.params;
-    try {
-        const user = await prisma.user.findUnique({
-            select: {
-                id: true,
-                username: true,
-                email: true,
-                role: true,
-                profilPicture: true,
-            },
-            where: { id }
-        });
+usersRouter.get("/:id",
+    validateIdParam("id"),
+    checkError,
+    async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const user = await prisma.user.findUnique({
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    role: true,
+                    profilPicture: true,
+                    gender: true,
+                    bio: true
+                },
+                where: { id }
+            });
 
-        if (user) return res.json(user);
-        return res.status(404).json({
-            message: `User with id: ${id} doesn't exist.`
-        })
-    } catch (error) {
-        console.log(`Error happens when retrieving user with id: ${id}, error: ${error}`);
-        res.status(500).json({
-            message: "Internal server error. Try later or report."
-        })
-    }
-});
+            if (user) return res.json(user);
+            return res.status(404).json({
+                message: `User with id: ${id} doesn't exist.`
+            })
+        } catch (error) {
+            console.log(`Error happens when retrieving user with id: ${id}, error: ${error}`);
+            res.status(500).json({
+                message: "Internal server error. Try later or report."
+            })
+        }
+    });
 
 /**
  * @openapi
@@ -135,6 +142,17 @@ usersRouter.get("/:id", validateIdParam("id"), checkError, async (req, res, next
  *                                  type: string
  *                                  format: binary
  *                                  description: the profile picture blob
+ *                                  required: false
+ *                              bio:
+ *                                  type: string
+ *                                  description: new bio
+ *                                  required: false
+ *                                  example: my bio
+ *                              gender:
+ *                                  type: string
+ *                                  description: new gender
+ *                                  enum: [M, F, O]
+ *                                  required: false
  *          responses:
  *              200:
  *                  content:
@@ -152,7 +170,7 @@ usersRouter.put("/:id",
         try {
             const { id } = req.params;
             const { username } = req.user;
-            const { username: newUsername } = req.body;
+            const { username: newUsername, gender, bio } = req.body;
             let imageUrl = null;
 
             if (req.file) {
@@ -165,13 +183,17 @@ usersRouter.put("/:id",
                 where: { id },
                 data: {
                     username: newUsername,
-                    profilPicture: imageUrl
+                    profilPicture: imageUrl,
+                    gender,
+                    bio
                 },
                 select: {
                     id: true,
                     username: true,
                     role: true,
-                    profilPicture: true
+                    profilPicture: true,
+                    gender: true,
+                    bio: true,
                 }
             });
 

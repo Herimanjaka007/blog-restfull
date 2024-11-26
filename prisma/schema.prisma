@@ -18,11 +18,19 @@ enum Role {
   USER
 }
 
+enum Gender {
+  F
+  M
+  O
+}
+
 model User {
   id            Int       @id @default(autoincrement())
   username      String
   email         String    @unique
   role          Role      @default(USER)
+  gender        Gender?
+  bio           String?
   password      String
   posts         Post[]
   comments      Comment[]
@@ -33,7 +41,7 @@ model Post {
   id        Int       @id @default(autoincrement())
   title     String
   content   String
-  authorId   Int      @map("autorId")
+  authorId  Int       @map("autorId")
   author    User      @relation(fields: [authorId], references: [id])
   comment   Comment[]
   createdAt DateTime  @default(now())

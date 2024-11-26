@@ -9,6 +9,9 @@ const validateRegister = [
     ,
     body("email")
         .trim()
+        .notEmpty()
+        .withMessage("Email is required")
+        .bail()
         .isEmail()
         .withMessage("Wrong mail format.")
         .bail()
