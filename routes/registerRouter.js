@@ -56,7 +56,7 @@ register.post("/",
                     email,
                     role,
                     password: hashedPassword,
-                    gender,
+                    gender: ["M", "F", "O"].includes(gender) ? gender : null,
                     bio
                 },
                 select: {

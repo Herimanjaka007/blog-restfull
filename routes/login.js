@@ -65,9 +65,9 @@ const login = express.Router();
 login.post("/", async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await prisma.user.findFirst({
+        const user = await prisma.user.findUnique({
             where: { email }
-        });
+        })
 
         if (!user) return res.status(401).json({ message: "Wrong email." });
 
