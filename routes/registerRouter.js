@@ -14,11 +14,14 @@ const register = express.Router();
  *          tags:
  *              - User
  *          requestBody:
- *              required: true
  *              content:
  *                  application/json:
  *                      schema:
  *                          $ref: "#components/schemas/Author"
+ *                  required:
+ *                      - username
+ *                      - email
+ *                      - password
  *          responses:
  *              201:
  *                  description: registration successfull
@@ -27,40 +30,51 @@ const register = express.Router();
  *                          schema:
  *                              $ref: "#components/schemas/Author"
  */
-register.post("/", validateRegister, checkError, async (req, res) => {
-    try {
-        const { username, email, role, password } = req.body;
-        const emailInDb = await prisma.user.findFirst({
-            where: { email },
-            select: { email: true }
-        });
+register.post("/",
+    validateRegister,
+    checkError,
+    async (req, res) => {
+        try {
+            const { username, email, role, password, gender, bio } = req.body;
+            const emailInDb = await prisma.user.findFirst({
+                where: { email },
+                select: { email: true }
+            });
 
-        if (emailInDb) {
-            return res.status(400).json({
+            if (emailInDb) {
+                return res.status(400).json({
+                    errors: {
+                        message: `Email: ${email} is already in use.`
+                    }
+                });
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newUser = await prisma.user.create({
+                data: {
+                    username,
+                    email,
+                    role,
+                    password: hashedPassword,
+                    gender,
+                    bio
+                },
+                select: {
+                    username: true,
+                    email: true,
+                    role: true,
+                }
+            });
+
+            res.json(newUser);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
                 errors: {
-                    message: `Email: ${email} is already in use.`
+                    message: error.message ?? "Server error, try later."
                 }
             });
         }
+    });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await prisma.user.create({
-            data: { username, email, role, password: hashedPassword },
-            select: {
-                username: true,
-                email: true,
-                role: true,
-            }
-        });
-
-        res.json(newUser);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            errors: {
-                message: error.message ?? "Server error, try later."
-            }
-        });
-    }
-})
 export default register;

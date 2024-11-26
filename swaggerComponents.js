@@ -71,6 +71,17 @@
  *                  password:
  *                      type: string
  *                      format: password
+ *                  gender:
+ *                      type: string
+ *                      enum: [M, F]
+ *                  role:
+ *                      type: string
+ *                      enum:
+ *                          - USER
+ *                          - ADMIN
+ *                  bio:
+ *                      type: string
+ *                      example: My bio
  *          Comment:
  *              type: object
  *              properties:
