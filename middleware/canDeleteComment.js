@@ -1,3 +1,5 @@
+import prisma from "../config/prisma.js";
+
 const canDeleteComment = async (req, res, next) => {
     const { commentId } = req.params;
     const { id: idUser } = req.user;

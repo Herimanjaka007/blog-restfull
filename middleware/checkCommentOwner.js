@@ -1,3 +1,4 @@
+import prisma from "../config/prisma.js";
 const checkCommentOwner = async (req, res, next) => {
     try {
         const { commentId } = req.params;
