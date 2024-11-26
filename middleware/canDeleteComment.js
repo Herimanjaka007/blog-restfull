@@ -8,7 +8,7 @@ const canDeleteComment = async (req, res, next) => {
 
     const post = await prisma.post.findFirst({
         where: { id: idPost },
-        select: { autorId: true }
+        select: { authorId: true }
     });
 
     const comment = await prisma.comment.findFirst({
