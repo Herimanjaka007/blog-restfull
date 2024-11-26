@@ -8,7 +8,7 @@ const checkResOwner = async (req, res, next) => {
 
         const post = await prisma.post.findFirst({
             where: { id: idPost },
-            select: { autorId: true }
+            select: { authorId: true }
         });
         if (Number(idUser) !== Number(post?.authorId)) {
             return res.status(401).json({
