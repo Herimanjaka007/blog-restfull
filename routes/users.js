@@ -167,17 +167,17 @@ usersRouter.put("/:id",
     canEditProfile,
     upload.single("image"),
     async (req, res) => {
-        try {
-            const { id } = req.params;
-            const { username } = req.user;
-            const { username: newUsername, gender, bio } = req.body;
-            let imageUrl = null;
+        const { id } = req.params;
+        const { username } = req.user;
+        const { username: newUsername, gender, bio } = req.body;
+        let imageUrl = null;
 
-            if (req.file) {
-                const { buffer, mimetype } = req.file;
-                const fileName = `${username}/profile/${Date.now()}`;
-                imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
-            }
+        if (req.file) {
+            const { buffer, mimetype } = req.file;
+            const fileName = `${username}/profile/${Date.now()}`;
+            imageUrl = await uploadFileToSupabase(buffer, fileName, mimetype);
+        }
+        try {
 
             const user = await prisma.user.update({
                 where: { id },
