@@ -5,9 +5,11 @@ import blogsRouter from './routes/blogsRouter.js';
 import login from './routes/login.js';
 import swaggerSpec from './swagger.js';
 import usersRouter from './routes/users.js';
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.get("/", async (req, res) => res.redirect("/docs"));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
