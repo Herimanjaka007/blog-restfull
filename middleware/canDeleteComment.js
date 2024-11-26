@@ -17,7 +17,7 @@ const canDeleteComment = async (req, res, next) => {
     });
 
     const isCommentOwner = Number(idUser) === Number(comment?.authorId);
-    const isPostOwner = Number(idUser) === Number(post?.autorId);
+    const isPostOwner = Number(idUser) === Number(post?.authorId);
 
     if (isCommentOwner || isPostOwner) {
         return next();

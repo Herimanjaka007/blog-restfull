@@ -10,7 +10,7 @@ const checkResOwner = async (req, res, next) => {
             where: { id: idPost },
             select: { autorId: true }
         });
-        if (Number(idUser) !== Number(post?.autorId)) {
+        if (Number(idUser) !== Number(post?.authorId)) {
             return res.status(401).json({
                 message: "Unauthorized, owner only can modify post."
             });
