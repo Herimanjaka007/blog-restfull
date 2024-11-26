@@ -45,7 +45,6 @@ const commentsRouter = express.Router({ mergeParams: true });
  */
 commentsRouter.post("/",
     authenticate,
-    validateIdParam,
     validateComment,
     checkError,
     async (req, res) => {
@@ -108,7 +107,7 @@ commentsRouter.post("/",
  */
 commentsRouter.put("/:commentId",
     authenticate,
-    validateIdParam,
+    validateIdParam("commentId"),
     checkError,
     checkCommentOwner,
     async (req, res) => {
@@ -152,7 +151,7 @@ commentsRouter.put("/:commentId",
 commentsRouter
     .delete("/:commentId",
         authenticate,
-        validateIdParam,
+        validateIdParam("commentId"),
         checkError,
         canDeleteComment,
         async (req, res) => {
