@@ -23,8 +23,8 @@
  *                      type: string
  *                      description: content of a blog
  *                      example: >
- *                             java is always popluar and an enterprise langage.
- *                              This is powerfull and verbose.
+ *                             java is always popular and an enterprise language.
+ *                              This is powerful and verbose.
  *                  authorId:
  *                      type: integer
  *                      description: id of the author the blog
@@ -47,11 +47,7 @@
  *                      type: string
  *                      description: the content of blog
  *                      example: content of blog
- *                  image:
- *                      type: string
- *                      format: binary
- *                      description: image file to upload
- * 
+ *
  *          ErrorResponse:
  *              type: object
  *              properties:

@@ -9,6 +9,7 @@ import checkResOwner from "../middleware/checkResOwner.js";
 import uploadFileToSupabase from "../config/supabase.js";
 import upload from "../config/multer.js";
 import commentsRouter from "./commentsRouter.js";
+import reactionRouter from "./blogReactionRouter.js";
 
 const blogsRouter = express.Router();
 /**
@@ -60,7 +61,7 @@ blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkE
     try {
         const { title, content } = req.body;
         const { id, username } = req.user;
-        var imageUrl = null;
+        let imageUrl = null;
 
         if (req.file) {
             const { buffer, mimetype } = req.file;
@@ -115,7 +116,7 @@ blogsRouter.post("/", authenticate, upload.single("image"), validateBlog, checkE
 blogsRouter.get("/", async (req, res) => {
     try {
         const blogs = await prisma.post.findMany({
-            include: { author: true, comment: true, }
+            include: { author: true, comment: true, likes: true,}
         });
         res.json(blogs);
     } catch (error) {
@@ -169,7 +170,7 @@ blogsRouter.get("/:id", validateIdParam("id"), checkError, async (req, res) => {
         const { id } = req.params;
         const blog = await prisma.post.findUnique({
             where: { id },
-            include: { comment: true, author: true }
+            include: { comment: true, author: true , likes: true}
         });
 
         if (blog)
@@ -197,10 +198,15 @@ blogsRouter.get("/:id", validateIdParam("id"), checkError, async (req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      $ref: "#/components/schemas/BlogField"
+ *                      type: object
+ *                      properties:
+ *                          title:
+ *                              type: string
+ *                          content:
+ *                              type: string
  *      responses:
  *          200:
- *              description: Update successfull.
+ *              description: Update successfully.
  *              content:
  *                  application/json:
  *                      schema:
@@ -215,7 +221,7 @@ blogsRouter.put("/:id", authenticate, validateIdParam("id"), checkResOwner, vali
             where: { id },
             data: { title, content }
         });
-        return res.json({ message: "Update successfull", blog });
+        return res.json({ message: "Update successfully", blog });
     } catch (error) {
         res.status(500).json({ message: "Server error, try later." });
     }
@@ -234,7 +240,7 @@ blogsRouter.put("/:id", authenticate, validateIdParam("id"), checkResOwner, vali
  *          - $ref: "#components/parameters/Id"
  *      responses:
  *          200:
- *              description: Delete successfull.
+ *              description: Delete successfully.
  *          401:
  *              description: Authorization required
  */
@@ -246,7 +252,7 @@ blogsRouter.delete("/:id", authenticate, validateIdParam("id"), checkResOwner, a
         });
 
         if (blog)
-            return res.json({ message: "Deleted successfull", blog });
+            return res.json({ message: "Deleted successfully", blog });
         return res.json({ message: `Post with id: ${id} is not found.` });
 
     } catch (error) {
@@ -256,5 +262,6 @@ blogsRouter.delete("/:id", authenticate, validateIdParam("id"), checkResOwner, a
 });
 
 blogsRouter.use("/:id/comments", commentsRouter);
+blogsRouter.use("/:id/reaction", reactionRouter);
 
 export default blogsRouter;

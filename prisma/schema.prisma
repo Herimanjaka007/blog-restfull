@@ -35,6 +35,7 @@ model User {
   posts         Post[]
   comments      Comment[]
   profilPicture String?
+  likes         Like[]    @relation(name: "like")
 }
 
 model Post {
@@ -46,6 +47,7 @@ model Post {
   comment   Comment[]
   createdAt DateTime  @default(now())
   image     String?
+  likes     Like[]    @relation(name: "like")
 }
 
 model Comment {
@@ -56,4 +58,12 @@ model Comment {
   postId    Int
   post      Post     @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())
+}
+
+model Like {
+  id      Int  @id @default(autoincrement())
+  blog    Post @relation(fields: [blogId], references: [id], name: "like")
+  blogId  Int
+  liker   User @relation(fields: [likerId], references: [id], name: "like")
+  likerId Int
 }
